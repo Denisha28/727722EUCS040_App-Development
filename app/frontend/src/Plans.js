@@ -1,12 +1,18 @@
+// src/Plans.js
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Plans.css';
 
 const Plans = () => {
+  const navigate = useNavigate();
+
+  const handleChoosePlan = (plan) => {
+    navigate('/register', { state: { plan } });
+  };
+
   return (
     <div className="plans">
       <h1>Membership Plans</h1>
-       
-      
       <div className="plan-list">
         <div className="plan-item">
           <div className="plan-header">
@@ -24,7 +30,7 @@ const Plans = () => {
               <li>✔️ Priority support</li>
             </ul>
           </div>
-          <button className="cta-button">Choose Basic</button>
+          <button className="cta-button" onClick={() => handleChoosePlan('Basic')}>Choose Basic</button>
         </div>
         <div className="plan-item">
           <div className="plan-header">
@@ -42,7 +48,7 @@ const Plans = () => {
               <li>✔️ Priority support with faster response times</li>
             </ul>
           </div>
-          <button className="cta-button">Choose Standard</button>
+          <button className="cta-button" onClick={() => handleChoosePlan('Standard')}>Choose Standard</button>
         </div>
         <div className="plan-item">
           <div className="plan-header">
@@ -60,7 +66,7 @@ const Plans = () => {
               <li>✔️ Priority support with dedicated account manager</li>
             </ul>
           </div>
-          <button className="cta-button1">Choose Premium</button>
+          <button className="cta-button" onClick={() => handleChoosePlan('Premium')}>Choose Premium</button>
         </div>
       </div>
     </div>
