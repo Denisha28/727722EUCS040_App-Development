@@ -8,7 +8,7 @@ const Courses = () => {
     <div className="courses">
       <h2>Master Chess with Our Expert-Led Courses</h2>
       <p>
-        Welcome to Elite Chess Academy! We provide a diverse range of courses tailored for players at every skill level. Whether you're just starting or looking to refine your strategies, our comprehensive training will help you elevate your game.
+        Welcome to Cube Chess Academy! We provide a diverse range of courses tailored for players at every skill level. Whether you're just starting or looking to refine your strategies, our comprehensive training will help you elevate your game.
       </p>
 
       <div className="course-list">

@@ -11,44 +11,44 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/tournaments")
+@CrossOrigin(origins = "http://localhost:3000") // Update if needed
 public class TournamentRegController {
 
     @Autowired
-    private TournamentRegService tournamentRegService;
+    private TournamentRegService service;
 
     @GetMapping
-    public List<TournamentReg> getAllRegistrations() {
-        return tournamentRegService.getAllRegistrations();
+    public List<TournamentReg>  getAllTournaments() {
+        return service. getAllTournaments();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TournamentReg> getRegistrationById(@PathVariable String id) {
-        Optional<TournamentReg> registration = tournamentRegService.getRegistrationById(id);
-        return registration.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<TournamentReg> getRegistrationById(@PathVariable Long id) {
+        Optional<TournamentReg> registration = service.getRegistrationById(id);
+        return registration.map(ResponseEntity::ok)
+                           .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public TournamentReg createRegistration(@RequestBody TournamentReg tournamentReg) {
-        return tournamentRegService.createOrUpdateRegistration(tournamentReg);
+    public ResponseEntity<TournamentReg> createRegistration(@RequestBody TournamentReg tournamentReg) {
+        TournamentReg createdRegistration = service.createOrUpdateRegistration(tournamentReg);
+        return ResponseEntity.ok(createdRegistration);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TournamentReg> updateRegistration(@PathVariable String id, @RequestBody TournamentReg tournamentReg) {
-        if (tournamentRegService.getRegistrationById(id).isPresent()) {
-            tournamentReg.setTid(id);
-            return ResponseEntity.ok(tournamentRegService.createOrUpdateRegistration(tournamentReg));
+    public ResponseEntity<TournamentReg> updateRegistration(@PathVariable Long id, @RequestBody TournamentReg tournamentReg) {
+        Optional<TournamentReg> existingRegistration = service.getRegistrationById(id);
+        if (existingRegistration.isPresent()) {
+            tournamentReg.setId(id);
+            return ResponseEntity.ok(service.createOrUpdateRegistration(tournamentReg));
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteRegistration(@PathVariable String id) {
-        if (tournamentRegService.getRegistrationById(id).isPresent()) {
-            tournamentRegService.deleteRegistration(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Void> deleteTournament(@PathVariable Long id) {
+        service.deleteTournament(id);
+        return ResponseEntity.noContent().build();
     }
 }

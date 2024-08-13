@@ -1,12 +1,18 @@
 package com.example.demo.service;
 import org.springframework.stereotype.Service;
 import com.example.demo.model.User;
+import com.example.demo.model.UserDTO;
 import com.example.demo.model.UserRoleEnum;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.utils.AuthResponse;
 import com.example.demo.utils.LoginRequest;
 import com.example.demo.utils.RegisterRequest;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +24,16 @@ public class AuthService {
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
     private final AuthenticationManager authenticationManager;
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll().stream()
+            .map(user -> UserDTO.builder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .build())
+            .collect(Collectors.toList());
+    }
 
     public AuthResponse register(RegisterRequest registerRequest) {
 
@@ -64,4 +80,13 @@ public class AuthService {
                 .refreshToken(refreshToken.getRefreshToken())
                 .build();
     }
+
+    public Optional<User> getByIDD(Long id){
+        return userRepository.findById(id);
+    }
+    public List<User> getalluserss(){
+        return userRepository.findAll();
+    }
+
+
 }

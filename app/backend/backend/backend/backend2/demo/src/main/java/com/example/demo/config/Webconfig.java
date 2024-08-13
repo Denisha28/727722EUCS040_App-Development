@@ -12,5 +12,6 @@ public class Webconfig implements WebMvcConfigurer {
                 .allowedOrigins("http://localhost:3000") // React app URL
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*");
+    
     }
 }

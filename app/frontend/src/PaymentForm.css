@@ -1,115 +1,90 @@
-/* src/PaymentForm.css */
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%; /* Ensure full height for scrolling */
+  width: 100%; /* Ensure full width */
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWlO7cAy8NImZED1RpLKGQVW8rmuYtYFgxVA&usqp=CAU'); /* Background image URL */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
 
-.payment-form {
+.auth-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-  padding: 20px;
-  background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQNLK19XoX3H319MWTncGPUyqQwGDsk6SV4w&s') no-repeat center center; /* Replace with your image path */
-  background-size: cover;
-  font-family: 'Roboto', sans-serif;
-}
-
-.payment-form h2 {
-  font-size: 2.5em;
-  margin-bottom: 20px;
-  color: #383232;
-  text-align: center;
-  border-bottom: 2px solid #352b2b;
-  padding-bottom: 10px;
-  position: relative;
-}
-
-.payment-form h2::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
+  min-height: 100vh; /* Ensure container takes at least full viewport height */
   width: 100%;
-  height: 5px;
-  background: linear-gradient(135deg, #ffffff, #ddd);
-  z-index: -1;
-}
-
-.payment-form form {
-  background: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   padding: 20px;
-  max-width: 400px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.9); /* Semi-transparent background for the form container */
+  border-radius: 12px; /* Rounded corners */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Shadow for depth */
 }
 
-.payment-form .form-group {
-  margin-bottom: 15px;
-  position: relative;
+.payment-form {
+  background: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+  padding: 40px; /* Increase padding inside the form */
+  border-radius: 12px; /* Increase border-radius for a more rounded look */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Stronger shadow for prominence */
+  width: 90%; /* Make form width responsive */
+  max-width: 600px; /* Increase max-width for larger forms */
 }
 
-.payment-form label {
+h2 {
+  color: #333; /* Darker color for the heading text */
+  font-size: 2.5rem; /* Increase font size for the heading */
+  margin-bottom: 30px; /* Increase space below the heading */
+}
+
+.form-group {
+  margin-bottom: 20px; /* Increase space between form groups */
+}
+
+label {
   display: block;
-  margin-bottom: 8px;
-  font-size: 1em;
+  font-size: 1.125rem; /* Increase font size for labels */
+  margin-bottom: 8px; /* Increase space below labels */
   color: #333;
 }
 
-.payment-form input {
+input {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1em;
-  box-sizing: border-box;
+  padding: 12px; /* Increase padding inside input fields */
+  font-size: 1.125rem; /* Increase font size for input text */
+  border: 1px solid #ccc;
+  border-radius: 6px; /* Increase border-radius for input fields */
 }
 
-.payment-form input:focus {
-  border-color: #000;
+input:focus {
+  border-color: #007bff;
   outline: none;
 }
 
-.payment-form .cta-button {
-  padding: 12px 20px;
-  font-size: 1.1em;
-  color: #fff;
-  background: #000;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background 0.3s;
-  width: 100%;
+.error-message {
+  color: #d9534f;
+  font-size: 0.9rem; /* Adjust error message font size */
   margin-top: 10px;
-}
-
-.payment-form .cta-button:hover {
-  background: #333;
 }
 
 .loading-message {
-  font-size: 1.2em;
+  font-size: 1.125rem; /* Increase font size for loading message */
+  color: #007bff;
+}
+
+.cta-button {
+  background-color: #007bff;
   color: #fff;
-  margin-top: 20px;
+  border: none;
+  padding: 12px 24px; /* Increase padding for the button */
+  font-size: 1.125rem; /* Increase font size for the button text */
+  border-radius: 6px; /* Increase border-radius for the button */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.error-message {
-  color: red;
-  margin-top: 10px;
-}
-
-@media (max-width: 600px) {
-  .payment-form h2 {
-    font-size: 2em;
-  }
-
-  .payment-form form {
-    padding: 15px;
-    width: 90%;
-  }
-
-  .payment-form .cta-button {
-    font-size: 1em;
-    padding: 10px;
-  }
+.cta-button:hover {
+  background-color: #0056b3;
 }

@@ -1,77 +1,239 @@
-// src/Admin.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from './AuthContext'; // Import useAuth hook
 import './Admin.css';
-import { FaUsers, FaChartLine, FaCog, FaFileAlt, FaSignOutAlt } from 'react-icons/fa';
-
 
 const Admin = () => {
+  const [activeTab, setActiveTab] = useState('tournaments');
+  const [tournaments, setTournaments] = useState([]);
+  const [plans, setPlans] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [searchId, setSearchId] = useState('');
+  const [searchResult, setSearchResult] = useState(null);
+  const [notFound, setNotFound] = useState(false);
+  
   const navigate = useNavigate();
-  const { logout } = useAuth(); // Get logout function from context
 
-  const handleManageUsers = () => {
-    alert('Manage Users functionality will be implemented here.');
+  useEffect(() => {
+    if (activeTab === 'tournaments') {
+      axios.get('http://localhost:8080/api/tournaments')
+        .then(response => setTournaments(response.data))
+        .catch(error => console.error('Error fetching tournaments:', error));
+    } else if (activeTab === 'plans') {
+      axios.get('http://localhost:8080/api/payments')
+        .then(response => setPlans(response.data))
+        .catch(error => console.error('Error fetching plans:', error));
+    } else if (activeTab === 'users') {
+      axios.get('http://localhost:8080/api/users/getall')
+        .then(response => setUsers(response.data))
+        .catch(error => console.error('Error fetching users:', error));
+    }
+  }, [activeTab]);
+
+  const handleSearch = () => {
+    setNotFound(false); // Reset not found flag
+    if (activeTab === 'tournaments') {
+      const result = tournaments.find(tournament => tournament.id === parseInt(searchId));
+      if (result) {
+        setSearchResult(result);
+      } else {
+        setSearchResult(null);
+        setNotFound(true);
+      }
+    } else if (activeTab === 'plans') {
+      const result = plans.find(plan => plan.id === parseInt(searchId));
+      if (result) {
+        setSearchResult(result);
+      } else {
+        setSearchResult(null);
+        setNotFound(true);
+      }
+    } else if (activeTab === 'users') {
+      const result = users.find(user => user.id === parseInt(searchId));
+      if (result) {
+        setSearchResult(result);
+      } else {
+        setSearchResult(null);
+        setNotFound(true);
+      }
+    }
   };
 
-  const handleViewReports = () => {
-    alert('View Reports functionality will be implemented here.');
-  };
+  const handleDelete = () => {
+    if (!searchResult) return;
 
-  const handleSettings = () => {
-    alert('Settings functionality will be implemented here.');
-  };
-
-  const handleManageContent = () => {
-    alert('Manage Content functionality will be implemented here.');
+    if (activeTab === 'tournaments') {
+      axios.delete(`http://localhost:8080/api/tournaments/${searchResult.id}`)
+        .then(() => {
+          setTournaments(tournaments.filter(tournament => tournament.id !== searchResult.id));
+          setSearchResult(null);
+          setNotFound(false);
+        })
+        .catch(error => console.error('Error deleting tournament:', error));
+    } else if (activeTab === 'plans') {
+      axios.delete(`http://localhost:8080/api/payments/${searchResult.id}`)
+        .then(() => {
+          setPlans(plans.filter(plan => plan.id !== searchResult.id));
+          setSearchResult(null);
+          setNotFound(false);
+        })
+        .catch(error => console.error('Error deleting plan:', error));
+    }
+    // No user deletion logic here
   };
 
   const handleLogout = () => {
-    logout(); // Call the logout function from context
-    navigate('/login'); // Navigate to the login page after logout
+    localStorage.removeItem('authToken');
+    navigate('/login');
+  };
+
+  const getPlaceholder = () => {
+    switch (activeTab) {
+      case 'tournaments':
+        return 'Enter TournamentReg ID';
+      case 'plans':
+        return 'Enter PlanReg ID';
+      case 'users':
+        return 'Enter User ID';
+      default:
+        return 'Enter ID to search';
+    }
   };
 
   return (
-    <div className='h'>
     <div className="admin-container">
-      <div className="admin-header">
-        
-        <h1>Admin Dashboard</h1>
-        <p>Welcome to the admin dashboard. Here you can manage users, view reports, and access admin functions.</p>
+      <div className="sidebar">
+        <h2>Admin Dashboard</h2>
+        <ul>
+          <li onClick={() => setActiveTab('tournaments')}>Tournaments</li>
+          <li onClick={() => setActiveTab('plans')}>Player Plans</li>
+          <li onClick={() => setActiveTab('users')}>Users</li>
+          <li onClick={handleLogout}>Logout</li>
+        </ul>
       </div>
-      <div className="admin-functions">
-        <div className="admin-card" onClick={handleManageUsers}>
-          <FaUsers className="admin-icon" />
-          <h2>User Management</h2>
-          <p>Manage user accounts, roles, and permissions.</p>
-          <button>Manage Users</button>
+      <div className="content">
+        <div className="search-container">
+          <input
+            type="text"
+            value={searchId}
+            onChange={(e) => setSearchId(e.target.value)}
+            placeholder={getPlaceholder()}
+          />
+          <button onClick={handleSearch}>Search</button>
+          {notFound && <p className="error-message">No record found with ID {searchId}</p>}
+          {searchResult && (
+            <div>
+              <p>Found: ID {searchResult.id}</p>
+              {activeTab !== 'users' && <button onClick={handleDelete}>Delete</button>}
+            </div>
+          )}
         </div>
-        <div className="admin-card" onClick={handleViewReports}>
-          <FaChartLine className="admin-icon" />
-          <h2>Reports</h2>
-          <p>View and analyze user activity and performance reports.</p>
-          <button>View Reports</button>
-        </div>
-        <div className="admin-card" onClick={handleSettings}>
-          <FaCog className="admin-icon" />
-          <h2>Settings</h2>
-          <p>Configure application settings and preferences.</p>
-          <button>Settings</button>
-        </div>
-        <div className="admin-card" onClick={handleManageContent}>
-          <FaFileAlt className="admin-icon" />
-          <h2>Content Management</h2>
-          <p>Manage articles, courses, and other content.</p>
-          <button>Manage Content</button>
-        </div>
+        {activeTab === 'tournaments' && (
+          <div className="tab-content">
+            <h2>Tournaments</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Tournament ID</th>
+                  <th>Tournament Name</th>
+                  <th>Player Name</th>
+                  <th>Email</th>
+                  <th>Location</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Array.isArray(tournaments) && tournaments.length > 0 ? (
+                  tournaments.map(tournament => (
+                    <tr key={tournament.id}>
+                      <td>{tournament.id}</td>
+                      <td>{tournament.tid}</td>
+                      <td>{tournament.tname}</td>
+                      <td>{tournament.pname}</td>
+                      <td>{tournament.email}</td>
+                      <td>{tournament.location}</td>
+                      <td>{tournament.date}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="7">No tournaments found</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+        {activeTab === 'plans' && (
+          <div className="tab-content">
+            <h2>Player Plans</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Plan</th>
+                  <th>Card Number</th>
+                  <th>Expiry Date</th>
+                  <th>Name on Card</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Array.isArray(plans) && plans.length > 0 ? (
+                  plans.map(plan => (
+                    <tr key={plan.id}>
+                      <td>{plan.id}</td>
+                      <td>{plan.name}</td>
+                      <td>{plan.email}</td>
+                      <td>{plan.plan}</td>
+                      <td>{plan.cardNumber}</td>
+                      <td>{plan.expiryDate}</td>
+                      <td>{plan.nameOnCard}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="7">No plans found</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+        {activeTab === 'users' && (
+          <div className="tab-content">
+            <h2>Users</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Email</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Array.isArray(users) && users.length > 0 ? (
+                  users.map(user => (
+                    <tr key={user.id}>
+                      <td>{user.id}</td>
+                      <td>{user.firstName}</td>
+                      <td>{user.lastName}</td>
+                      <td>{user.email}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="4">No users found</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
-      <div className="admin-footer">
-        <button className="logout-button" onClick={handleLogout}>
-          <FaSignOutAlt /> Logout
-        </button>
-        <p>© 2024 Elite Chess Academy. All rights reserved.</p>
-      </div>
-    </div>
     </div>
   );
 };

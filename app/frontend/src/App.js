@@ -22,6 +22,7 @@ import TournamentRegistration from './TournamentRegistration';
 import Receipt from './Receipt';
 import OnlineTournamentRegistration from './OnlineTournamentRegistration';
 import OfflineTournamentRegistration from './OfflineTournamentRegistration';
+import AdminLogin from './AdminLogin';
 
 
 
@@ -30,7 +31,7 @@ const App = () => {
   const location = useLocation();
 
   // Define routes where the Navbar should not be displayed
-  const noNavbarRoutes = ['/payment', '/success'];
+  const noNavbarRoutes = ['/payment', '/admin'];
 
   // Check if the current location is in the noNavbarRoutes list
   const shouldShowNavbar = !noNavbarRoutes.includes(location.pathname);
@@ -43,6 +44,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signUp" element={<SignUp />} />
+          <Route path="/adminlogin" element={<AdminLogin />} />
           <Route path="/register" element={<Register />} />
           <Route path="/courses" element={<Courses />} />
           <Route path="/courses/:id" element={<CourseDetail />} />

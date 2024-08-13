@@ -67,6 +67,9 @@ const Login = () => {
         <p className="toggle-auth" onClick={() => navigate('/signUp')}>
           Don't have an account? Sign Up
         </p>
+        <p className="toggle-auth" onClick={() => navigate('/adminlogin')}>
+          Login as Admin
+        </p>
       </div>
     </div>
   );

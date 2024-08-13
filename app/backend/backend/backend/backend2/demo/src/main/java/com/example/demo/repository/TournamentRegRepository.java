@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TournamentRegRepository extends JpaRepository<TournamentReg, String> {
-
+public interface TournamentRegRepository extends JpaRepository<TournamentReg, Long> {
+    // Custom query methods can be added here if needed
 }

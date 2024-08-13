@@ -12,21 +12,20 @@ import java.util.Optional;
 public class TournamentRegService {
 
     @Autowired
-    private TournamentRegRepository tournamentRegRepository;
+    private TournamentRegRepository repository;
 
-    public List<TournamentReg> getAllRegistrations() {
-        return tournamentRegRepository.findAll();
+    public List<TournamentReg> getAllTournaments() {
+        return repository.findAll();
     }
-
-    public Optional<TournamentReg> getRegistrationById(String id) {
-        return tournamentRegRepository.findById(id);
+    public Optional<TournamentReg> getRegistrationById(Long id) {
+        return repository.findById(id);
     }
 
     public TournamentReg createOrUpdateRegistration(TournamentReg tournamentReg) {
-        return tournamentRegRepository.save(tournamentReg);
+        return repository.save(tournamentReg);
     }
 
-    public void deleteRegistration(String id) {
-        tournamentRegRepository.deleteById(id);
+    public void deleteTournament(Long id) {
+        repository.deleteById(id);
     }
 }
